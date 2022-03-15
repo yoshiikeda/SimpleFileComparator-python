@@ -108,8 +108,8 @@ def Compare(file_1_, file_2_):
                     if U != V:
                         print()
                         print('Results: Unmatched. ([File 1]={0}; [File 2]={1} at byte {2:,}.)'.format(hex(U),
-                                                                                                   hex(V),
-                                                                                                   pointer + P),
+                                                                                                       hex(V),
+                                                                                                       pointer + P),
                               flush=True)
                         
                         raise Exclusion()
