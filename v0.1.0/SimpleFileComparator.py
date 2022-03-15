@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 
-#import datetime
 import os
 import pathlib
 import queue
-from re import I
 import sys
 import _thread
 import threading
@@ -16,7 +14,6 @@ SYSTEM_EXIT_CODE = { 'Success': 0,
 
 BUFFER_SIZE = 1000 # in bytes
 
-MUTEX = _thread.allocate_lock()
 QUEUE = queue.Queue()
 
 
@@ -59,19 +56,10 @@ class Status(threading.Thread):
             except queue.Empty:
                 # Empty
                 pass
-        
-            #TIME_DELTA = (datetime.datetime.now() - TIME_START).seconds
-            #TIME_DELTA_HOUR = TIME_DELTA // 3600
-            #TIME_DELTA_MIN = (TIME_DELTA - (TIME_DELTA_HOUR * 3600)) // 60
-            #TIME_DELTA_SEC = TIME_DELTA - ((TIME_DELTA_HOUR * 3600) + (TIME_DELTA_MIN * 60))
             
             TIME_DELTA = time.gmtime(time.time() - TIME_START)
             
             status_previous = status_current
-            #status_current = __class__.STATUS_TEMPLATE.format(Progress=(amount_compared / self._SIZE * 100),
-            #                                                  Hour=TIME_DELTA_HOUR,
-            #                                                  Min=TIME_DELTA_MIN,
-            #                                                  Sec=TIME_DELTA_SEC)
             status_current = __class__.STATUS_TEMPLATE.format(Progress=(amount_compared / self._FILE_SIZE * 100),
                                                               E_Hour=TIME_DELTA.tm_hour,
                                                               E_Min=TIME_DELTA.tm_min,
@@ -103,7 +91,7 @@ def Compare(file_1_, file_2_):
     FILES = ( open(file_1_, 'rb'),
               open(file_2_, 'rb') )
     
-    STATUS = Status(FILE_SIZE, MUTEX)
+    STATUS = Status(FILE_SIZE, _thread.allocate_lock())
     STATUS.daemon = True
     
     STATUS.start()
